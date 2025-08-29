@@ -15,10 +15,15 @@
 
 (require 'font-lock)
 
-
 (defgroup treesit-faces nil
   "Faces for highlighting code."
   :group 'treesit)
+
+;;; ------------------------------------
+;;; Bases.
+(defface treesit-face-base
+  '((t :foreground unspecified :inherit nil))
+  "Base face for treesit.")
 
 ;;; ------------------------------------
 ;;; Functions.
@@ -34,7 +39,7 @@
   :group 'treesit-faces)
 
 (defface treesit-face-function.builtin
-  '((default :inherit font-lock-builtin-face))
+  '((default :inherit treesit-face-function))
   "Face for builtin functions."
   :group 'treesit-faces)
 
@@ -79,7 +84,7 @@
   :group 'treesit-faces)
 
 (defface treesit-face-type.builtin
-  '((default :inherit font-lock-builtin-face))
+  '((default :inherit treesit-face-type))
   "Face for builtin types."
   :group 'treesit-faces)
 
@@ -109,7 +114,7 @@
   :group 'treesit-faces)
 
 (defface treesit-face-variable.builtin
-  '((default :inherit font-lock-builtin-face))
+  '((default :inherit treesit-face-variable))
   "Face for builtin variables."
   :group 'treesit-faces)
 
@@ -118,9 +123,8 @@
   "Face for \"dangerous\" variables, e.g. mutable or dynamically-bound."
   :group 'treesit-faces)
 
-;;; TODO: Define a more sensible default.
 (defface treesit-face-property
-  '((default :inherit font-lock-constant-face :slant italic))
+  '((default :inherit font-lock-variable-name-face :slant italic))
   "Face for properties."
   :group 'treesit-faces)
 
@@ -207,7 +211,7 @@
   :group 'treesit-faces)
 
 (defface treesit-face-constant.builtin
-  '((default :inherit font-lock-builtin-face))
+  '((default :inherit treesit-face-constant))
   "Face for builtin constants."
   :group 'treesit-faces)
 
@@ -257,6 +261,58 @@
   "Face for attributes markup languages."
   :group 'treesit-faces)
 
+(defface treesit-face-markup.heading
+  '((t (:inherit treesit-face-base)))
+  "Face for headings in markup languages.")
+(defface treesit-face-markup.heading.base
+  `((t (:inherit font-lock-function-name-face
+        :weight bold)))
+  "Base face for headers.")
+
+(defface treesit-face-markup.heading.1
+  `((t (:inherit (font-lock-keyword-face treesit-face-markup.heading.base))))
+  "Face for level 1 headings in markup languages.")
+
+(defface treesit-face-markup.heading.2
+  `((t (:inherit (font-lock-variable-name-face treesit-face-markup.heading.base))))
+  "Face for level 2 headings in markup languages.")
+
+(defface treesit-face-markup.heading.3
+  `((t (:inherit (font-lock-function-name-face treesit-face-markup.heading.base))))
+  "Face for level 3 headings in markup languages.")
+
+(defface treesit-face-markup.heading.4
+  `((t (:inherit (font-lock-comment-face treesit-face-markup.heading.base))))
+  "Face for level 4 headings in markup languages.")
+
+(defface treesit-face-markup.heading.5
+  `((t (:inherit (font-lock-type-face treesit-face-markup.heading.base))))
+  "Face for level 5 headings in markup languages.")
+
+(defface treesit-face-markup.heading.6
+  `((t (:inherit (font-lock-constant-face treesit-face-markup.heading.base))))
+  "Face for level 6 headings in markup languages.")
+
+(defface treesit-face-markup.list
+  '((t (:inherit shadow :slant normal :weight normal)))
+  "Face for list item markers.")
+
+(defface treesit-face-markup.raw
+  '((t (:inherit (treesit-face-base font-lock-constant-face))))
+  "Face for inline code.")
+
+(defface treesit-face-markup.strikethrough
+  '((t (:strike-through t)))
+  "Face for strikethrough text.")
+
+(put 'treesit-face-markup.italic 'face-alias 'italic)
+(put 'treesit-face-markup.link 'face-alias 'font-lock-string-face)
+(put 'treesit-face-markup.link.label 'face-alias 'link)
+(put 'treesit-face-markup.link.url 'face-alias 'font-lock-string-face)
+(put 'treesit-face-markup.list.checked 'face-alias 'font-lock-builtin-face)
+(put 'treesit-face-markup.list.unchecked 'face-alias 'font-lock-builtin-face)
+(put 'treesit-face-markup.strong 'face-alias 'bold)
+
 ;;; ------------------------------------
 ;;; Errors.
 (defface treesit-face-error
@@ -266,7 +322,7 @@
 
 ;;; ------------------------------------
 ;;; Aliases
-(put 'treesit-face-boolean 'face-alias 'treesit-face-type.builtin)
+(put 'treesit-face-boolean 'face-alias 'treesit-face-constant.builtin)
 (put 'treesit-face-character 'face-alias 'treesit-face-variable)
 (put 'treesit-face-character.special 'face-alias 'treesit-face-variable)
 (put 'treesit-face-class 'face-alias 'treesit-face-type)
@@ -282,7 +338,7 @@
 (put 'treesit-face-include 'face-alias 'treesit-face-function.macro)
 (put 'treesit-face-keyword.conditional 'face-alias 'treesit-face-keyword)
 (put 'treesit-face-keyword.coroutine 'face-alias 'treesit-face-keyword)
-(put 'treesit-face-keyword.directive 'face-alias 'treesit-face-keyword)
+(put 'treesit-face-keyword.directive 'face-alias 'treesit-face-function.macro)
 (put 'treesit-face-keyword.directive.define 'face-alias 'treesit-face-define)
 (put 'treesit-face-keyword.exception 'face-alias 'treesit-face-keyword)
 (put 'treesit-face-keyword.function 'face-alias 'treesit-face-function)
@@ -305,6 +361,8 @@
 (put 'treesit-face-storageclass.lifetime 'face-alias 'treesit-face-type.argument)
 (put 'treesit-face-string.escape 'face-alias 'treesit-face-escape)
 (put 'treesit-face-string.regex 'face-alias 'treesit-face-string)
+(put 'treesit-face-string.special.path 'face-alias 'treesit-face-string)
+(put 'treesit-face-string.special.symbol 'face-alias 'treesit-face-variable)
 (put 'treesit-face-string.special.url 'face-alias 'treesit-face-string.uri)
 (put 'treesit-face-tag.attribute 'face-alias 'treesit-face-attribute)
 (put 'treesit-face-tag.delimiter 'face-alias 'treesit-face-punctuation.bracket)
@@ -323,25 +381,6 @@
 ;; Diff
 (put 'treesit-face-text.diff.add 'face-alias 'diff-added)
 (put 'treesit-face-text.diff.delete 'face-alias 'diff-removed)
-
-;; Markdown
-(put 'treesit-face-markup.heading 'face-alias 'markdown-table-face)
-(put 'treesit-face-markup.heading.1 'face-alias 'markdown-header-face-1)
-(put 'treesit-face-markup.heading.2 'face-alias 'markdown-header-face-2)
-(put 'treesit-face-markup.heading.3 'face-alias 'markdown-header-face-3)
-(put 'treesit-face-markup.heading.4 'face-alias 'markdown-header-face-4)
-(put 'treesit-face-markup.heading.5 'face-alias 'markdown-header-face-5)
-(put 'treesit-face-markup.heading.6 'face-alias 'markdown-header-face-6)
-(put 'treesit-face-markup.italic 'face-alias 'markdown-italic-face)
-(put 'treesit-face-markup.link 'face-alias 'markdown-markup-face)
-(put 'treesit-face-markup.link.label 'face-alias 'markdown-link-face)
-(put 'treesit-face-markup.link.url 'face-alias 'markdown-url-face)
-(put 'treesit-face-markup.list 'face-alias 'markdown-list-face)
-(put 'treesit-face-markup.list.checked 'face-alias 'markdown-gfm-checkbox-face)
-(put 'treesit-face-markup.list.unchecked 'face-alias 'markdown-gfm-checkbox-face)
-(put 'treesit-face-markup.raw 'face-alias 'markdown-inline-code-face)
-(put 'treesit-face-markup.strikethrough 'face-alias 'markdown-strike-through-face)
-(put 'treesit-face-markup.strong 'face-alias 'markdown-bold-face)
 
 (provide 'treesit-faces)
 ;;; treesit-faces.el ends here
