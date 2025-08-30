@@ -79,8 +79,8 @@ jobs:
           repo_token: ${{ github.token }}
           file: tree-sitter-grammars*.tar.gz
           file_glob: true
-          tag: ${{ env.BUNDLE_VERSION }}
-          release_name: ${{ env.BUNDLE_VERSION }}
+          tag: ${{ env.BUNDLE_VERSION }}_windows
+          release_name: ${{ env.BUNDLE_VERSION }}_windows
           draft: false
           prerelease: true
 
